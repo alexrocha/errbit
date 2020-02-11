@@ -1,4 +1,4 @@
-FROM ruby:2.5.1-alpine
+FROM ruby:2.5.1
 LABEL maintainer="David Papp <david@ghostmonitor.com>"
 
 WORKDIR /app
@@ -9,25 +9,24 @@ RUN echo "gem: --no-document" >> /etc/gemrc \
   && bundle config --global disable_shared_gems false \
   && gem update --system 2.7.4 \
   && gem install bundler --version 1.16.1 \
-  && apk add --no-cache \
-    curl \
+  && apt-get update; apt-get install -y --no-install-recommends curl \
     less \
     libxml2-dev \
     libxslt-dev \
     nodejs \
-    tzdata
+    tzdata \
+    build-essential \
+    patch \
+    ruby-dev \
+    zlib1g-dev
 
 
 COPY ["Gemfile", "Gemfile.lock", "/app/"]
 
-RUN apk add --no-cache --virtual build-dependencies \
-      build-base \
-  && bundle config build.nokogiri --use-system-libraries \
-  && bundle install \
-      -j "$(getconf _NPROCESSORS_ONLN)" \
-      --retry 5 \
-      --without test development no_docker \
-  && apk del build-dependencies
+RUN gem update --system
+RUN gem update bundler
+
+RUN bundle install
 
 COPY . /app
 

@@ -499,4 +499,4 @@ DEPENDENCIES
   yajl-ruby
 
 BUNDLED WITH
-   2.1.2
+   1.16.6

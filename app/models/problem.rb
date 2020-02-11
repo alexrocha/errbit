@@ -314,5 +314,6 @@ private
   def attribute_index(value)
     Digest::MD5.hexdigest(value.to_s)
   end
+
 end
 # rubocop:enable Metrics/ClassLength
